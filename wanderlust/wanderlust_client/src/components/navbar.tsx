@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "@/lib/auth-client";
 import { cn } from "cn";
 import { UserRound } from "lucide-react";
 import Image from "next/image";
@@ -8,7 +9,7 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Destinations", href: "/destinations" },
+  { label: "Destinations", href: "/all-destinations" },
   { label: "My Bookings", href: "/bookings" },
   { label: "Admin", href: "/admin" },
 ];
@@ -20,6 +21,9 @@ const accountLinks = [
 
 function Navbar() {
   const pathname = usePathname();
+  const {data:session} = useSession();
+  const user = session?.user;
+  console.log(user)
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-background">
@@ -72,7 +76,10 @@ function Navbar() {
               className="flex items-center gap-1.5 text-[15px] text-foreground transition-colors hover:text-brand"
             >
               <UserRound className="size-4" aria-hidden />
-              <span className="hidden sm:inline">Profile</span>
+              {
+                !user ? <span className="hidden sm:inline">Profile</span> : user.name
+              }
+              
             </Link>
           </li>
           {accountLinks.map((link) => (
